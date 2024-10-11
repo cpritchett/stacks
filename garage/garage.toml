@@ -1,0 +1,26 @@
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+compression = "2"
+
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "0.0.0.0:3901"
+
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "0.0.0.0:3900"
+root_domain = ".s3.hypyr.space"
+
+[k2v_api]
+api_bind_addr = "[::]:3904"
+
+[s3_web]
+bind_addr = "0.0.0.0:3902"
+root_domain = ".site.s3.hypyr.space"
+index = "index.html"
+
+[admin]
+api_bind_addr = "0.0.0.0:3903"

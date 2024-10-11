@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  vscode:
+    image: lscr.io/linuxserver/code-server:4.93.1-ls236
+    environment:
+      - PUID=568
+      - PGID=1702
+      - TZ=America/Chicago
+      - umask=002
+      - proxy_domain="code.barbary.hypyr.space"
+    volumes:
+      - /mnt/apps01/docker/code-server/config:/config
+      - /mnt/apps01/stacks:/stacks
+    ports:
+      - 8443:8443
+    networks:
+      - proxy-net
+networks:
+  proxy-net:
+    external: true

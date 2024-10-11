@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  garage:
+    image: dxflrs/amd64_garage:v1.0.1
+    restart: unless-stopped
+    command: /garage -c garage.toml server
+    user: 568:1702
+    env_file: .env
+    volumes:
+      - /mnt/data01/backups/s3:/storage:rw
+      - ./garage.toml:/garage.toml:ro
+      - /mnt/apps01/docker/garage/meta:/var/lib/garage/meta
+      - /mnt/apps01/docker/garage/data:/var/lib/garage/data
+    networks:
+      - proxy-net
+networks:
+  proxy-net:
+    external: true

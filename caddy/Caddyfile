@@ -1,0 +1,88 @@
+{
+	acme_dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+	email admin@hypyr.space
+	acme_ca https://acme-v02.api.letsencrypt.org/directory
+	#acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+
+	storage file_system /data
+	http_port 80
+	https_port 443
+}
+
+*.hypyr.space {
+	tls {
+		dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+		resolvers 1.1.1.1
+		propagation_timeout 5m
+	}
+
+	@dockge host dockge.hypyr.space
+	handle @dockge {
+		reverse_proxy http://dockge:31014
+	}
+
+}
+
+barbary.hypyr.space *.barbary.hypyr.space {
+	tls {
+		dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+		resolvers 1.1.1.1
+		propagation_timeout 5m
+	}
+
+	@codebarbary host code.barbary.hypyr.space
+	handle @codebarbary {
+		reverse_proxy vscode:8443
+	}
+
+	@barbary host barbary.hypyr.space
+	handle @barbary {
+		reverse_proxy http://barbary.hypyr.space:8080
+	}
+
+}
+
+s3.hypyr.space, *.s3.hypyr.space {
+	tls {
+		dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+		resolvers 1.1.1.1
+		propagation_timeout 5m 
+	}
+
+	reverse_proxy garage:3900 {
+		health_uri /health
+		health_port 3903
+		#health_interval 15s
+		#health_timeout  5s
+	}
+}
+
+*.site.hypyr.space {
+	tls {
+		dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+		resolvers 1.1.1.1
+		propagation_timeout 5m
+	}
+
+	reverse_proxy garage:3902 {
+		health_uri /health
+		health_port 3903
+		#health_interval 15s
+		#health_timeout  5s
+	}
+}
+
+admin.s3.hypyr.space {
+	tls {
+		dns cloudflare {env.CADDY_CLOUDFLARE_API_KEY}
+		resolvers 1.1.1.1
+		propagation_timeout 5m
+	}
+
+	reverse_proxy garage:3903 {
+		health_uri /health
+		health_port 3903
+		#health_interval 15s
+		#health_timeout  5s
+	}
+}
